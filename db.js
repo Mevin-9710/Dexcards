@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 import crypto from 'node:crypto';
 import { SrsEngine, DEFAULT_SRS_SETTINGS } from './srsEngine.js';
@@ -7,9 +8,11 @@ import { SrsEngine, DEFAULT_SRS_SETTINGS } from './srsEngine.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DATA_DIR = path.join(__dirname, 'data');
-const CARDS_FILE = path.join(DATA_DIR, 'flashcards.json');
-const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
+// In serverless / Vercel, the only writable directory is os.tmpdir()
+const BUNDLED_DATA_DIR = path.join(__dirname, 'data');
+const DATA_DIR = process.env.VERCEL
+  ? path.join(os.tmpdir(), 'dexcards_data')
+  : BUNDLED_DATA_DIR;
 
 export class FlashcardDatabase {
   constructor(dataDir = DATA_DIR) {
@@ -43,13 +46,22 @@ export class FlashcardDatabase {
   }
 
   init() {
-    if (!fs.existsSync(this.dataDir)) {
-      fs.mkdirSync(this.dataDir, { recursive: true });
+    try {
+      if (!fs.existsSync(this.dataDir)) {
+        fs.mkdirSync(this.dataDir, { recursive: true });
+      }
+    } catch (err) {
+      console.warn('[DB] Cannot create dataDir (serverless read-only mode):', err.message);
     }
 
-    if (fs.existsSync(this.settingsFile)) {
+    // Try loading settings: first from target dir, fallback to bundled dir
+    const settingsSource = fs.existsSync(this.settingsFile)
+      ? this.settingsFile
+      : path.join(BUNDLED_DATA_DIR, 'settings.json');
+
+    if (fs.existsSync(settingsSource)) {
       try {
-        const raw = fs.readFileSync(this.settingsFile, 'utf8');
+        const raw = fs.readFileSync(settingsSource, 'utf8');
         const parsed = JSON.parse(raw);
         this.settings = {
           ...this.settings,
@@ -65,9 +77,14 @@ export class FlashcardDatabase {
       this.saveSettings();
     }
 
-    if (fs.existsSync(this.cardsFile)) {
+    // Try loading cards: first from target dir, fallback to bundled dir
+    const cardsSource = fs.existsSync(this.cardsFile)
+      ? this.cardsFile
+      : path.join(BUNDLED_DATA_DIR, 'flashcards.json');
+
+    if (fs.existsSync(cardsSource)) {
       try {
-        const raw = fs.readFileSync(this.cardsFile, 'utf8');
+        const raw = fs.readFileSync(cardsSource, 'utf8');
         this.data = JSON.parse(raw);
       } catch (err) {
         console.warn('Warning: Could not parse flashcards.json, seeding starter decks:', err.message);
@@ -84,8 +101,7 @@ export class FlashcardDatabase {
       fs.writeFileSync(tmpFile, JSON.stringify(this.data, null, 2), 'utf8');
       fs.renameSync(tmpFile, this.cardsFile);
     } catch (err) {
-      console.error('Failed to save flashcards data:', err);
-      throw err;
+      console.warn('[DB] Storage write bypassed (in-memory mode for serverless):', err.message);
     }
   }
 
@@ -95,8 +111,7 @@ export class FlashcardDatabase {
       fs.writeFileSync(tmpFile, JSON.stringify(this.settings, null, 2), 'utf8');
       fs.renameSync(tmpFile, this.settingsFile);
     } catch (err) {
-      console.error('Failed to save settings:', err);
-      throw err;
+      console.warn('[DB] Settings write bypassed (in-memory mode for serverless):', err.message);
     }
   }
 

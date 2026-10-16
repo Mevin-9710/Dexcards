@@ -11,7 +11,9 @@ import { CertManager } from './certManager.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const PUBLIC_DIR = path.join(__dirname, 'public');
+const PUBLIC_DIR = fs.existsSync(path.join(__dirname, 'public', 'index.html'))
+  ? path.join(__dirname, 'public')
+  : __dirname;
 
 export class FlashcardServer {
   constructor(options = {}) {
@@ -683,6 +685,16 @@ export class FlashcardServer {
   }
 
   readJsonBody(req) {
+    if (req.body) {
+      if (typeof req.body === 'object') return Promise.resolve(req.body);
+      if (typeof req.body === 'string') {
+        try {
+          return Promise.resolve(JSON.parse(req.body));
+        } catch (e) {
+          return Promise.resolve({});
+        }
+      }
+    }
     return new Promise((resolve, reject) => {
       let body = '';
       req.on('data', chunk => {

@@ -35,9 +35,20 @@ export class CertManager {
   }
 
   async ensureCertificates(forceRegenerate = false) {
-    if (!fs.existsSync(this.certsDir)) {
-      fs.mkdirSync(this.certsDir, { recursive: true });
+    if (process.env.VERCEL) {
+      return {
+        key: '',
+        cert: '',
+        fingerprint: 'VERCEL_MANAGED_TLS',
+        fromCache: true
+      };
     }
+
+    try {
+      if (!fs.existsSync(this.certsDir)) {
+        fs.mkdirSync(this.certsDir, { recursive: true });
+      }
+    } catch (e) {}
 
     if (!forceRegenerate && fs.existsSync(this.keyPath) && fs.existsSync(this.certPath)) {
       try {
@@ -97,9 +108,13 @@ export class CertManager {
     const privateKey = pems.private;
     const cert = pems.cert;
 
-    fs.writeFileSync(this.keyPath, privateKey, 'utf8');
-    fs.writeFileSync(this.certPath, cert, 'utf8');
-    fs.writeFileSync(this.pemPath, `${cert}\n${privateKey}`, 'utf8');
+    try {
+      fs.writeFileSync(this.keyPath, privateKey, 'utf8');
+      fs.writeFileSync(this.certPath, cert, 'utf8');
+      fs.writeFileSync(this.pemPath, `${cert}\n${privateKey}`, 'utf8');
+    } catch (e) {
+      console.warn('[Cert] Could not cache cert files (read-only filesystem):', e.message);
+    }
 
     const fingerprint = this.computeFingerprint(cert);
     console.log(`✓ TLS Certificates generated successfully! SHA-256 Fingerprint: ${fingerprint}`);
