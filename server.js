@@ -727,3 +727,13 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     process.exit(1);
   });
 }
+
+let serverlessInstance = null;
+export default async function handler(req, res) {
+  if (!serverlessInstance) {
+    const db = new FlashcardDatabase();
+    serverlessInstance = new FlashcardServer({ db });
+  }
+  return await serverlessInstance.handleRequest(req, res);
+}
+

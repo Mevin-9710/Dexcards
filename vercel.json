@@ -6,6 +6,8 @@
     { "source": "/message", "destination": "/api/index.js" },
     { "source": "/message/(.*)", "destination": "/api/index.js" },
     { "source": "/messages", "destination": "/api/index.js" },
+    { "source": "/cert", "destination": "/api/index.js" },
+    { "source": "/cert.pem", "destination": "/api/index.js" },
     { "source": "/api", "destination": "/api/index.js" },
     { "source": "/api/(.*)", "destination": "/api/index.js" }
   ]

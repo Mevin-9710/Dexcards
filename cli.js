@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+import { fileURLToPath } from 'node:url';
 import { FlashcardServer } from './server.js';
 import { FlashcardDatabase } from './db.js';
 
@@ -64,7 +64,10 @@ async function main() {
   }
 }
 
-main().catch(err => {
-  console.error('Error:', err);
-  process.exit(1);
-});
+if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+  main().catch(err => {
+    console.error('Error:', err);
+    process.exit(1);
+  });
+}
+

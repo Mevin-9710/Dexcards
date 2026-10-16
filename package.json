@@ -2,7 +2,7 @@
   "name": "dexcards",
   "version": "1.0.0",
   "description": "Dexcards — Mobile Liquid Glass Flashcard MCP with Adaptive Spaced Repetition (SRS) for Gemini & Vercel",
-  "main": "server.js",
+  "main": "api/index.js",
   "type": "module",
   "bin": {
     "flashcard-mcp": "./cli.js",
