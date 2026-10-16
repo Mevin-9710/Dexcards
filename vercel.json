@@ -6,6 +6,7 @@
     { "source": "/message", "destination": "/api/index.js" },
     { "source": "/message/(.*)", "destination": "/api/index.js" },
     { "source": "/messages", "destination": "/api/index.js" },
+    { "source": "/api", "destination": "/api/index.js" },
     { "source": "/api/(.*)", "destination": "/api/index.js" }
   ]
 }
