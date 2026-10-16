@@ -734,6 +734,17 @@ export default async function handler(req, res) {
     const db = new FlashcardDatabase();
     serverlessInstance = new FlashcardServer({ db });
   }
+
+  // In Vercel rewrites, resolve original path
+  const urlObj = new URL(req.url, 'http://localhost');
+  const matchedPath = req.headers['x-matched-path'] || urlObj.searchParams.get('__route');
+  if (matchedPath) {
+    urlObj.searchParams.delete('__route');
+    const remainingSearch = urlObj.searchParams.toString();
+    req.url = matchedPath + (remainingSearch ? `?${remainingSearch}` : '');
+  }
+
   return await serverlessInstance.handleRequest(req, res);
 }
+
 

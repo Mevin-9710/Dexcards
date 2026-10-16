@@ -1,14 +1,14 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/mcp", "destination": "/api/index.js" },
-    { "source": "/sse", "destination": "/api/index.js" },
-    { "source": "/message", "destination": "/api/index.js" },
-    { "source": "/message/(.*)", "destination": "/api/index.js" },
-    { "source": "/messages", "destination": "/api/index.js" },
-    { "source": "/cert", "destination": "/api/index.js" },
-    { "source": "/cert.pem", "destination": "/api/index.js" },
-    { "source": "/api", "destination": "/api/index.js" },
-    { "source": "/api/(.*)", "destination": "/api/index.js" }
+    { "source": "/mcp", "destination": "/api/index.js?__route=/mcp" },
+    { "source": "/sse", "destination": "/api/index.js?__route=/sse" },
+    { "source": "/message", "destination": "/api/index.js?__route=/message" },
+    { "source": "/message/(.*)", "destination": "/api/index.js?__route=/message/$1" },
+    { "source": "/messages", "destination": "/api/index.js?__route=/messages" },
+    { "source": "/cert", "destination": "/api/index.js?__route=/cert" },
+    { "source": "/cert.pem", "destination": "/api/index.js?__route=/cert.pem" },
+    { "source": "/api", "destination": "/api/index.js?__route=/api/status" },
+    { "source": "/api/(.*)", "destination": "/api/index.js?__route=/api/$1" }
   ]
 }

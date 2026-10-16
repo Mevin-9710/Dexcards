@@ -14,6 +14,16 @@ function getServer() {
 export default async function handler(req, res) {
   try {
     const server = getServer();
+
+    // In Vercel rewrites, resolve original path
+    const urlObj = new URL(req.url, 'http://localhost');
+    const matchedPath = req.headers['x-matched-path'] || urlObj.searchParams.get('__route');
+    if (matchedPath) {
+      urlObj.searchParams.delete('__route');
+      const remainingSearch = urlObj.searchParams.toString();
+      req.url = matchedPath + (remainingSearch ? `?${remainingSearch}` : '');
+    }
+
     return await server.handleRequest(req, res);
   } catch (err) {
     console.error('[Vercel Function Error]:', err);
@@ -23,3 +33,4 @@ export default async function handler(req, res) {
     }
   }
 }
+
