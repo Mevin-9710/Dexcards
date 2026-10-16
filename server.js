@@ -126,16 +126,23 @@ export class FlashcardServer {
 
     try {
       // 1. MCP SSE ENDPOINTS
-      if (pathname === '/sse' && req.method === 'GET') {
+      if ((pathname === '/sse' || pathname === '/api/sse') && req.method === 'GET') {
         return await this.handleMcpSse(req, res);
       }
-      if ((pathname === '/message' || pathname === '/messages') && req.method === 'POST') {
+      if ((pathname === '/message' || pathname === '/messages' || pathname === '/api/message' || pathname === '/api/messages') && req.method === 'POST') {
         return await this.handleMcpPostMessage(req, res, parsedUrl);
       }
 
       // 2. DIRECT MCP JSON-RPC 2.0 ENDPOINT (HTTP Transport)
-      if (pathname === '/mcp' && req.method === 'POST') {
+      if ((pathname === '/mcp' || pathname === '/api/mcp' || pathname === '/api/index.js') && req.method === 'POST') {
         return await this.handleMcpDirectJsonRpc(req, res);
+      }
+
+      // Base API status check
+      if ((pathname === '/api' || pathname === '/api/index.js') && req.method === 'GET') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(this.getStatus()));
+        return;
       }
 
       // 3. CERTIFICATE DOWNLOADS
