@@ -619,7 +619,7 @@ export class FlashcardServer {
     }
 
     // MCP Control Endpoints
-    if (pathname === '/api/mcp/status' && req.method === 'GET') {
+    if ((pathname === '/api/status' || pathname === '/api/mcp/status') && req.method === 'GET') {
       res.writeHead(200);
       res.end(JSON.stringify(this.getStatus()));
       return;
