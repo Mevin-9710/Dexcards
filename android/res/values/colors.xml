@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg_dark">#07090e</color>
+    <color name="accent_primary">#6366f1</color>
+    <color name="glass_border">#2a3346</color>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lumino Flashcards</string>
+    <string name="service_running">Lumino Flashcard MCP Active :8443</string>
+    <string name="service_subtext">Spaced repetition and Gemini MCP server running</string>
+</resources>

@@ -1,0 +1,31 @@
+{
+  "name": "dexcards",
+  "version": "1.0.0",
+  "description": "Dexcards — Mobile Liquid Glass Flashcard MCP with Adaptive Spaced Repetition (SRS) for Gemini & Vercel",
+  "main": "server.js",
+  "type": "module",
+  "bin": {
+    "flashcard-mcp": "./cli.js",
+    "dexcards": "./cli.js"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests/srs.test.js && node tests/db.test.js && node tests/mcp.test.js && node tests/server.test.js"
+  },
+  "keywords": [
+    "mcp",
+    "gemini",
+    "flashcards",
+    "spaced-repetition",
+    "liquid-glass",
+    "mobile",
+    "vercel"
+  ],
+  "author": "Mevin (Dexcards)",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "selfsigned": "^5.5.0",
+    "zod": "^3.24.2"
+  }
+}

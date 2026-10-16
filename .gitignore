@@ -1,0 +1,7 @@
+node_modules/
+*.tmp*
+scratch*
+.DS_Store
+*.log
+android/bin/
+*.log

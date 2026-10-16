@@ -1,0 +1,27 @@
+{
+  "srs": {
+    "startingEase": 2.5,
+    "minEase": 1.3,
+    "maxEase": 3.5,
+    "easyBonus": 1.35,
+    "hardFactor": 1.2,
+    "lapsePenaltyHealth": 25,
+    "successBoostHealth": 15,
+    "healthIntervalSensitivity": 0.65,
+    "learningStepsMinutes": [
+      1,
+      10
+    ],
+    "graduatingIntervalDays": 1,
+    "easyIntervalDays": 4,
+    "lapseIntervalPercentage": 0.15,
+    "initialCardHealth": 70
+  },
+  "server": {
+    "httpPort": 8880,
+    "httpsPort": 8443,
+    "useHttps": true,
+    "host": "0.0.0.0",
+    "apiToken": ""
+  }
+}
